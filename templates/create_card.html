@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <h1>Issue Card</h1>
+    <form method="post" class="form-card">
+      <label>Account</label>
+      <select name="account_id" required>
+        <option value="">Select account</option>
+        {% for account in accounts %}
+          <option value="{{ account.id }}">{{ account.name }}</option>
+        {% endfor %}
+      </select>
+      <label>Card Type</label>
+      <select name="card_type">
+        <option>Debit</option>
+        <option>Credit</option>
+      </select>
+      <label>Expiry Date</label>
+      <input type="month" name="expiry_date" required>
+      <label>Status</label>
+      <select name="status">
+        <option>Active</option>
+        <option>Suspended</option>
+        <option>Blocked</option>
+      </select>
+      <button type="submit">Issue Card</button>
+    </form>
+  </section>
+{% endblock %}

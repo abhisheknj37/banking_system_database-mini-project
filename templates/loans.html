@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>Loans</h1>
+        <p class="section-subtitle">Create loan applications and monitor their status.</p>
+      </div>
+      <a class="button" href="{{ url_for('create_loan') }}">New Loan</a>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Amount</th>
+          <th>Interest</th>
+          <th>Term</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loan in loans %}
+          <tr>
+            <td>{{ loan.id }}</td>
+            <td>{{ loan.customer_name or 'N/A' }}</td>
+            <td>${{ '{:.2f}'.format(loan.amount) }}</td>
+            <td>{{ loan.interest_rate }}%</td>
+            <td>{{ loan.term_months }} months</td>
+            <td>{{ loan.status }}</td>
+            <td>{{ loan.created_at }}</td>
+            <td>
+              <form method="post" action="{{ url_for('update_loan_status', loan_id=loan.id) }}" class="inline-form">
+                <select name="status">
+                  <option value="Pending" {% if loan.status == 'Pending' %}selected{% endif %}>Pending</option>
+                  <option value="Approved" {% if loan.status == 'Approved' %}selected{% endif %}>Approved</option>
+                  <option value="Rejected" {% if loan.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+                <button type="submit">Update</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="8">No loans recorded.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>Accounts</h1>
+        <p class="section-subtitle">Search, review, and manage all customer accounts.</p>
+      </div>
+      <a class="button" href="{{ url_for('create_account') }}">Create new account</a>
+    </div>
+
+    <form method="get" class="search-bar">
+      <input type="search" name="query" placeholder="Search by name or email" value="{{ search }}">
+      <button type="submit">Search</button>
+    </form>
+
+    <p class="section-subtitle">{{ accounts|length }} account{{ 's' if accounts|length != 1 else '' }} found.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Customer</th>
+          <th>Branch</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Balance</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for account in accounts %}
+          <tr>
+            <td>{{ account.id }}</td>
+            <td>{{ account.name }}</td>
+            <td>{{ account.email }}</td>
+            <td>{{ account.customer_name or '-' }}</td>
+            <td>{{ account.branch_name or '-' }}</td>
+            <td>{{ account.account_type or 'Savings' }}</td>
+            <td>{{ account.status or 'Active' }}</td>
+            <td>${{ '{:.2f}'.format(account.balance) }}</td>
+            <td>
+              <a class="button small" href="{{ url_for('account_details', account_id=account.id) }}">View</a>
+              <a class="button small" href="{{ url_for('transaction', account_id=account.id) }}">Txn</a>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="9">No accounts created yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

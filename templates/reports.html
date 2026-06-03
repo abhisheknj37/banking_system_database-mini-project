@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>Reports</h1>
+        <p class="section-subtitle">Export performance data and review bank metrics.</p>
+      </div>
+      <div class="action-buttons">
+        <a class="button" href="{{ url_for('export_accounts') }}">Export Accounts CSV</a>
+        <a class="button button-secondary" href="{{ url_for('export_transactions') }}">Export Transactions CSV</a>
+      </div>
+    </div>
+
+    <div class="summary-grid">
+      <article>
+        <h2>Accounts</h2>
+        <p><strong>{{ account_summary.total_accounts }}</strong></p>
+        <p>Total balance: <strong>${{ '{:.2f}'.format(account_summary.total_balance) }}</strong></p>
+      </article>
+      <article>
+        <h2>Loans</h2>
+        <p><strong>{{ loan_summary.total_loans }}</strong></p>
+        <p>Total loan amount: <strong>${{ '{:.2f}'.format(loan_summary.total_loan_amount or 0) }}</strong></p>
+      </article>
+      <article>
+        <h2>Transactions</h2>
+        <p><strong>{{ transaction_summary.total_transactions }}</strong></p>
+        <p>Volume: <strong>${{ '{:.2f}'.format(transaction_summary.total_volume or 0) }}</strong></p>
+      </article>
+    </div>
+  </section>
+{% endblock %}

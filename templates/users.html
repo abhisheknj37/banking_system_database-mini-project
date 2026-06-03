@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>Staff Management</h1>
+        <p class="section-subtitle">Create and manage admin, manager, and staff accounts.</p>
+      </div>
+      <a class="button" href="{{ url_for('create_user') }}">Create User</a>
+    </div>
+
+    <form method="get" class="search-bar">
+      <input type="search" name="query" placeholder="Search users by name or email" value="{{ search }}">
+      <button type="submit">Search</button>
+    </form>
+
+    <p class="section-subtitle">{{ users|length }} user{{ 's' if users|length != 1 else '' }} found.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td><span style="background: {% if user.role == 'admin' %}rgba(248, 113, 113, 0.2); color: #fca5a5{% elif user.role == 'manager' %}rgba(59, 130, 246, 0.2); color: #93c5fd{% else %}rgba(34, 197, 94, 0.2); color: #86efac{% endif %}; padding: 0.35rem 0.7rem; border-radius: 999px;">{{ user.role }}</span></td>
+            <td>{{ user.created_at }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

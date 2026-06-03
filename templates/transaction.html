@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <h1>{{ account.name }} - {{ action_title }}</h1>
+    <p>Current balance: ${{ '{:.2f}'.format(account.balance) }}</p>
+    <form method="post" class="form-card">
+      <label>Amount</label>
+      <input type="number" step="0.01" min="0.01" name="amount" required>
+      <label>Note</label>
+      <input type="text" name="note" placeholder="Optional description">
+      <button type="submit">{{ action_title }}</button>
+    </form>
+  </section>
+{% endblock %}

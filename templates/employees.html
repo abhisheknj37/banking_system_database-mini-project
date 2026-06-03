@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>Employees</h1>
+        <p class="section-subtitle">Manage staff members and branch roles.</p>
+      </div>
+      <a class="button" href="{{ url_for('create_employee') }}">Add Employee</a>
+    </div>
+    <form method="get" class="search-bar">
+      <input type="search" name="query" placeholder="Search employees by name, email, or role" value="{{ search }}">
+      <button type="submit">Search</button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Branch</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for employee in employees %}
+          <tr>
+            <td>{{ employee.id }}</td>
+            <td>{{ employee.name }}</td>
+            <td>{{ employee.email }}</td>
+            <td>{{ employee.role }}</td>
+            <td>{{ employee.branch_name or '-' }}</td>
+            <td>{{ employee.created_at }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6">No employees found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

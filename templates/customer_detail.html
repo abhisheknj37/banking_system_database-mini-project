@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>{{ customer.name }}</h1>
+        <p class="section-subtitle">Profile details, branch assignment, accounts and loans.</p>
+      </div>
+      <a class="button" href="{{ url_for('create_account') }}">Create Account</a>
+    </div>
+
+    <div class="profile-card">
+      <p><strong>Email:</strong> {{ customer.email }}</p>
+      <p><strong>Phone:</strong> {{ customer.phone or '-' }}</p>
+      <p><strong>Branch:</strong> {{ customer.branch_name or 'Unassigned' }}</p>
+      <p><strong>Joined:</strong> {{ customer.created_at }}</p>
+    </div>
+
+    <h2>Accounts</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Balance</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for account in accounts %}
+          <tr>
+            <td>{{ account.id }}</td>
+            <td>{{ account.name }}</td>
+            <td>${{ '{:.2f}'.format(account.balance) }}</td>
+            <td>{{ account.status or 'Active' }}</td>
+            <td>{{ account.created_at }}</td>
+            <td><a class="button small" href="{{ url_for('account_details', account_id=account.id) }}">View</a></td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6">No accounts found for this customer.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Loans</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Amount</th>
+          <th>Interest</th>
+          <th>Term</th>
+          <th>Status</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loan in loans %}
+          <tr>
+            <td>{{ loan.id }}</td>
+            <td>${{ '{:.2f}'.format(loan.amount) }}</td>
+            <td>{{ loan.interest_rate }}%</td>
+            <td>{{ loan.term_months }} months</td>
+            <td>{{ loan.status }}</td>
+            <td>{{ loan.created_at }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6">No loan applications found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <h1>{{ account.name }}</h1>
+    <div class="account-card">
+      <p><strong>Email:</strong> {{ account.email }}</p>
+      <p><strong>Customer:</strong> {{ account.customer_name or '-' }}</p>
+      <p><strong>Branch:</strong> {{ account.branch_name or '-' }}</p>
+      <p><strong>Type:</strong> {{ account.account_type or 'Savings' }}</p>
+      <p><strong>Status:</strong> {{ account.status or 'Active' }}</p>
+      <p><strong>Balance:</strong> ${{ '{:.2f}'.format(account.balance) }}</p>
+      <p><strong>Created:</strong> {{ account.created_at }}</p>
+    </div>
+    <div class="actions-row">
+      <a class="button" href="{{ url_for('transaction', account_id=account.id, action='deposit') }}">Deposit</a>
+      <a class="button" href="{{ url_for('transaction', account_id=account.id, action='withdraw') }}">Withdraw</a>
+    </div>
+    <h2>Recent Transactions</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Type</th><th>Amount</th><th>Note</th></tr>
+      </thead>
+      <tbody>
+        {% for txn in transactions %}
+          <tr>
+            <td>{{ txn.created_at }}</td>
+            <td>{{ txn.type }}</td>
+            <td>${{ '{:.2f}'.format(txn.amount) }}</td>
+            <td>{{ txn.note }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="4">No transactions yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h2>Cards</h2>
+    <table>
+      <thead>
+        <tr><th>Card Number</th><th>Type</th><th>Expiry</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        {% for card in cards %}
+          <tr>
+            <td>{{ card.card_number }}</td>
+            <td>{{ card.card_type }}</td>
+            <td>{{ card.expiry_date }}</td>
+            <td>{{ card.status }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="4">No cards assigned.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

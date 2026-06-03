@@ -1,0 +1,81 @@
+erDiagram
+    USERS {
+        INTEGER id PK
+        TEXT name
+        TEXT email UK
+        TEXT password_hash
+        TEXT role
+        TEXT created_at
+    }
+    BRANCHES {
+        INTEGER id PK
+        TEXT name
+        TEXT address
+        TEXT phone
+        TEXT created_at
+    }
+    CUSTOMERS {
+        INTEGER id PK
+        TEXT name
+        TEXT email UK
+        TEXT phone
+        INTEGER branch_id FK
+        TEXT created_at
+    }
+    ACCOUNTS {
+        INTEGER id PK
+        TEXT name
+        TEXT email UK
+        REAL balance
+        INTEGER customer_id FK
+        INTEGER branch_id FK
+        TEXT account_type
+        TEXT status
+        TEXT created_at
+    }
+    LOANS {
+        INTEGER id PK
+        INTEGER customer_id FK
+        REAL amount
+        REAL interest_rate
+        INTEGER term_months
+        TEXT status
+        TEXT created_at
+    }
+    CARDS {
+        INTEGER id PK
+        INTEGER account_id FK
+        TEXT card_number UK
+        TEXT card_type
+        TEXT expiry_date
+        TEXT status
+        TEXT created_at
+    }
+    EMPLOYEES {
+        INTEGER id PK
+        TEXT name
+        TEXT email UK
+        TEXT role
+        INTEGER branch_id FK
+        TEXT created_at
+    }
+    TRANSACTIONS {
+        INTEGER id PK
+        INTEGER account_id FK
+        TEXT type
+        REAL amount
+        INTEGER target_account FK
+        TEXT note
+        TEXT created_at
+    }
+
+    BRANCHES ||--o{ CUSTOMERS : "has"
+    BRANCHES ||--o{ ACCOUNTS : "hosts"
+    BRANCHES ||--o{ EMPLOYEES : "employs"
+    CUSTOMERS ||--o{ ACCOUNTS : "owns"
+    CUSTOMERS ||--o{ LOANS : "applies"
+    ACCOUNTS ||--o{ CARDS : "issues"
+    ACCOUNTS ||--o{ TRANSACTIONS : "source_txns"
+    ACCOUNTS ||--o{ TRANSACTIONS : "target_txns"
+
+%% Users are not directly linked via foreign keys in the current schema.

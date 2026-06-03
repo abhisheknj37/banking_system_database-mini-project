@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>Branches</h1>
+        <p class="section-subtitle">Manage service locations and branch details.</p>
+      </div>
+      <a class="button" href="{{ url_for('create_branch') }}">Add Branch</a>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for branch in branches %}
+          <tr>
+            <td>{{ branch.id }}</td>
+            <td>{{ branch.name }}</td>
+            <td>{{ branch.address }}</td>
+            <td>{{ branch.phone or '-' }}</td>
+            <td>{{ branch.created_at }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">No branches available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

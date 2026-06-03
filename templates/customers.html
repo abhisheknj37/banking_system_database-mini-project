@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>Customers</h1>
+        <p class="section-subtitle">Track customers, contact details, and branch assignments.</p>
+      </div>
+      <a class="button" href="{{ url_for('create_customer') }}">Add Customer</a>
+    </div>
+    <form method="get" class="search-bar">
+      <input type="search" name="query" placeholder="Search customers by name or email" value="{{ search }}">
+      <button type="submit">Search</button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Branch</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for customer in customers %}
+          <tr>
+            <td>{{ customer.id }}</td>
+            <td><a href="{{ url_for('customer_detail', customer_id=customer.id) }}">{{ customer.name }}</a></td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone or '-' }}</td>
+            <td>{{ customer.branch_name or '-' }}</td>
+            <td>{{ customer.created_at }}</td>
+            <td>
+              <a class="button small" href="{{ url_for('customer_detail', customer_id=customer.id) }}">Profile</a>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="7">No customers found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

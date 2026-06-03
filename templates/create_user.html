@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <h1>Create New User</h1>
+    <form method="post" class="form-card">
+      <label>Name</label>
+      <input type="text" name="name" placeholder="Full name" required>
+      <label>Email</label>
+      <input type="email" name="email" placeholder="user@bank.com" required>
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Strong password" required>
+      <label>Role</label>
+      <select name="role" required>
+        <option value="staff">Staff</option>
+        <option value="manager">Manager</option>
+        <option value="admin">Administrator</option>
+      </select>
+      <p style="color: #94a3b8; font-size: 0.9rem; margin: 0.75rem 0;">
+        <strong>Roles:</strong> Admin (full access) • Manager (branch/employee control) • Staff (view-only)
+      </p>
+      <button type="submit">Create User</button>
+    </form>
+  </section>
+{% endblock %}

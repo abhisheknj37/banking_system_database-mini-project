@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <section>
+    <div class="section-head">
+      <div>
+        <h1>Transaction History</h1>
+        <p class="section-subtitle">Filter by account or transaction type for easy review.</p>
+      </div>
+      <a class="button" href="{{ url_for('export_transactions') }}">Export CSV</a>
+    </div>
+
+    <form method="get" class="search-bar">
+      <select name="account_id">
+        <option value="">All accounts</option>
+        {% for account in accounts %}
+          <option value="{{ account.id }}" {% if account_filter == account.id|string %}selected{% endif %}>{{ account.name }}</option>
+        {% endfor %}
+      </select>
+      <select name="type">
+        <option value="">All types</option>
+        {% for option in ['Deposit', 'Withdraw', 'Transfer Out', 'Transfer In'] %}
+          <option value="{{ option }}" {% if type_filter == option %}selected{% endif %}>{{ option }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Filter</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Account</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Target</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for txn in transactions %}
+          <tr>
+            <td>{{ txn.created_at }}</td>
+            <td>{{ txn.account_name }}</td>
+            <td>{{ txn.type }}</td>
+            <td>${{ '{:.2f}'.format(txn.amount) }}</td>
+            <td>{{ txn.target_name or '-' }}</td>
+            <td>{{ txn.note }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6">No transactions found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
