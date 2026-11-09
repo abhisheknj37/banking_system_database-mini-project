@@ -3,19 +3,23 @@ import sqlite3
 import os
 import functools
 import hashlib
+from werkzeug.security import generate_password_hash, check_password_hash
 import csv
 import io
 from datetime import datetime
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'bank.db')
+DB_PATH = os.environ.get('DATABASE_PATH', os.path.join(BASE_DIR, 'bank.db'))
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'replace-with-a-secure-secret')
+app.secret_key = os.environ.get('FLASK_SECRET_KEY') or 'local-development-only-change-me'
+if os.environ.get('RENDER') and not os.environ.get('FLASK_SECRET_KEY'):
+    raise RuntimeError('Set FLASK_SECRET_KEY in Render environment.')
+app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax', SESSION_COOKIE_SECURE=bool(os.environ.get('RENDER')))
 
 
 def hash_password(password):
-    return hashlib.sha256(password.encode('utf-8')).hexdigest()
+    return generate_password_hash(password)
 
 
 def get_db():
@@ -185,10 +189,12 @@ def init_db():
     conn.commit()
     conn.close()
 
-    if not query_db('SELECT id FROM users WHERE email = ?', ('admin@bank.com',), one=True):
+    admin_email = os.environ.get('BANK_ADMIN_EMAIL', '').strip().lower()
+    admin_password = os.environ.get('BANK_ADMIN_PASSWORD', '')
+    if admin_email and admin_password and not query_db('SELECT id FROM users WHERE email = ?', (admin_email,), one=True):
         execute_db(
             'INSERT INTO users (name, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?)',
-            ('Administrator', 'admin@bank.com', hash_password('admin123'), 'admin', now()),
+            ('Administrator', admin_email, hash_password(admin_password), 'admin', now()),
         )
 
     if not query_db('SELECT id FROM branches ORDER BY id LIMIT 1', one=True):
@@ -247,7 +253,16 @@ def login():
         password = request.form.get('password', '').strip()
         user = query_db('SELECT * FROM users WHERE email = ?', (email,), one=True)
 
-        if user and user['password_hash'] == hash_password(password):
+        valid_password = False
+        if user:
+            stored_hash = user['password_hash']
+            try:
+                valid_password = check_password_hash(stored_hash, password)
+            except (ValueError, TypeError):
+                valid_password = stored_hash == hashlib.sha256(password.encode('utf-8')).hexdigest()
+            if valid_password and stored_hash == hashlib.sha256(password.encode('utf-8')).hexdigest():
+                execute_db('UPDATE users SET password_hash = ? WHERE id = ?', (hash_password(password), user['id']))
+        if user and valid_password:
             session.clear()
             session['user_id'] = user['id']
             flash(f'Welcome back, {user["name"]}!', 'success')
@@ -911,6 +926,7 @@ def create_user():
     return render_template('create_user.html')
 
 
+init_db()
+
 if __name__ == '__main__':
-    init_db()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=not bool(os.environ.get('RENDER')))
