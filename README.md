@@ -1,5 +1,9 @@
 # Smart Banking System
 
+<escape>🚀 Live Demo: https://smart-banking-system-p8oc.onrender.com</escape>  
+> Demo-only environment. Admin login requires setting `BANK_ADMIN_EMAIL` and `BANK_ADMIN_PASSWORD` in Render. SQLite storage is ephemeral; do not enter real financial or personal data.
+
+
 > Deployment setup: configure `FLASK_SECRET_KEY`, `BANK_ADMIN_EMAIL`, and `BANK_ADMIN_PASSWORD` in Render before signing in. The hosted free demo uses ephemeral SQLite storage; do not use real financial or personal data.
 
 
