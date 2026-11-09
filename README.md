@@ -1,12 +1,15 @@
 # Smart Banking System
 
+> Deployment setup: configure `FLASK_SECRET_KEY`, `BANK_ADMIN_EMAIL`, and `BANK_ADMIN_PASSWORD` in Render before signing in. The hosted free demo uses ephemeral SQLite storage; do not use real financial or personal data.
+
+
 A full-stack Flask banking application with authentication, responsive UI, and SQLite persistence.
 
 ## Features
 
 - Secure login page with session-based authentication
 - Role-based access control: Admin, Manager, Staff
-- Default admin user: `admin@bank.com` / `admin123`
+- Admin account is created securely from `BANK_ADMIN_EMAIL` and `BANK_ADMIN_PASSWORD` environment variables; no default production credentials.
 - **Account management**: Create, view, and manage customer accounts
 - **Deposits & withdrawals**: Process fund transactions with balance tracking
 - **Money transfers**: Transfer funds between accounts with dual transaction logging
@@ -57,12 +60,9 @@ python app.py
 http://127.0.0.1:5000
 ```
 
-## Login
+## Admin setup
 
-Use the built-in admin account to sign in:
-
-- Email: `admin@bank.com`
-- Password: `admin123`
+For deployment, set `FLASK_SECRET_KEY`, `BANK_ADMIN_EMAIL`, and `BANK_ADMIN_PASSWORD` as environment variables in Render. Use a unique strong password. The free demo uses SQLite on ephemeral storage, so records may reset after a restart.
 
 ## Database schema & initialization
 
@@ -110,4 +110,4 @@ If you want, I can add the generated PNG to the repo for you — shall I create 
 
 - `bank.db` is created automatically when the app is first run.
 - To reset data, stop the app and delete `bank.db`.
-- Replace `FLASK_SECRET_KEY` in your environment for production use.
+- Set `FLASK_SECRET_KEY` to a strong random value in production.
